@@ -26,11 +26,11 @@ int main(int argc, char *argv[]) {
 
     printf("Magic number: %s\n", sb.magic == 0xD34D ? "OK" : "INVALID");
     printf("Block size: %s\n", sb.block_size == 4096 ? "OK" : "INVALID");
-    printf("Total blocks: %s\n", sb.fs_size == 64 ? "OK" : "INVALID");
+    printf("Total blocks: %s\n", sb.block_count == 64 ? "OK" : "INVALID");  // Corrected here
     printf("Inode bitmap block: %s\n", sb.inode_bitmap_block == 1 ? "OK" : "INVALID");
     printf("Data bitmap block: %s\n", sb.data_bitmap_block == 2 ? "OK" : "INVALID");
     printf("Inode table start: %s\n", sb.inode_table_start == 3 ? "OK" : "INVALID");
-    printf("First data block: %s\n", sb.data_block_start == 8 ? "OK" : "INVALID");
+    printf("First data block: %s\n", sb.first_data_block == 4 ? "OK" : "INVALID");  // Corrected here
     printf("Inode size: %s\n", sb.inode_size == 256 ? "OK" : "INVALID");
 
     return 0;
