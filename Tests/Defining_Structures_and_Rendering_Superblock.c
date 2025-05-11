@@ -16,7 +16,6 @@ int main(int argc, char *argv[]) {
 
     Superblock sb;
 
-    // Read the first block (Superblock)
     if (fread(&sb, sizeof(Superblock), 1, fs) != 1) {
         fprintf(stderr, "Failed to read superblock.\n");
         fclose(fs);
@@ -26,7 +25,7 @@ int main(int argc, char *argv[]) {
     // Print superblock details
     printf("Magic Number: 0x%X\n", sb.magic);
     printf("Block Size: %u\n", sb.block_size);
-    printf("Total Blocks: %u\n", sb.total_blocks);
+    printf("Total Blocks: %u\n", sb.block_count); 
     printf("Inode Bitmap Block: %u\n", sb.inode_bitmap_block);
     printf("Data Bitmap Block: %u\n", sb.data_bitmap_block);
     printf("Inode Table Start: %u\n", sb.inode_table_start);
