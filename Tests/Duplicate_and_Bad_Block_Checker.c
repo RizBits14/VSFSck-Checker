@@ -20,26 +20,26 @@ int main() {
 
     for (int i = 0; i < sb.inode_count; i++) {
         struct inode temp_inode;
-        fseek(fp, sb.inode_table_block * BLOCK_SIZE + (i * sb.inode_size), SEEK_SET);
+        fseek(fp, sb.inode_table_start * BLOCK_SIZE + (i * sb.inode_size), SEEK_SET);  
         fread(&temp_inode, sizeof(struct inode), 1, fp);
 
-        if (temp_inode.hard_links <= 0 || temp_inode.deletion_time != 0)
+        if (temp_inode.links <= 0 || temp_inode.deletion_time != 0)  
             continue;
 
         // Check direct block
         uint32_t b = temp_inode.direct_block;
-        if (b >= sb.total_blocks || b < sb.first_data_block) {
+        if (b >= sb.block_count || b < sb.first_data_block) {  
             printf("Inode %d has invalid direct block reference: %u\n", i, b);
             errors_found++;
         } else {
             block_refs[b]++;
         }
 
-        // You can extend this to indirect, double, and triple blocks if needed
+        
     }
 
     // Detect duplicates
-    for (int i = sb.first_data_block; i < sb.total_blocks; i++) {
+    for (int i = sb.first_data_block; i < sb.block_count; i++) {  // Changed to block_count
         if (block_refs[i] > 1) {
             printf("Data block %d is referenced by multiple inodes (%d times).\n", i, block_refs[i]);
             errors_found++;
