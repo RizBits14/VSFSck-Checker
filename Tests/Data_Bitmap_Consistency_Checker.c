@@ -32,11 +32,11 @@ int main() {
     // Loop through all inodes
     for (int i = 0; i < sb.inode_count; i++) {
         struct inode temp_inode;
-        fseek(fp, sb.inode_table_block * BLOCK_SIZE + i * sb.inode_size, SEEK_SET);
+        fseek(fp, sb.inode_table_start * BLOCK_SIZE + i * sb.inode_size, SEEK_SET);
         fread(&temp_inode, sizeof(struct inode), 1, fp);
 
         // Check if inode is valid
-        if (temp_inode.hard_links > 0 && temp_inode.deletion_time == 0) {
+        if (temp_inode.links > 0 && temp_inode.deletion_time == 0) {
             int db = temp_inode.direct_block;
 
             if (db >= sb.first_data_block && db < BLOCK_COUNT) {
