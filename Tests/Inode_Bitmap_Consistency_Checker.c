@@ -22,16 +22,18 @@ int main() {
     fread(inode_bitmap, BLOCK_SIZE, 1, fp);
 
     // Read all inodes and check consistency
-    fseek(fp, sb.inode_table_block * BLOCK_SIZE, SEEK_SET);
+    fseek(fp, sb.inode_table_start * BLOCK_SIZE, SEEK_SET);
 
     int errors_found = 0;
     for (int i = 0; i < sb.inode_count; i++) {
         struct inode temp_inode;
-        fseek(fp, sb.inode_table_block * BLOCK_SIZE + (i * INODE_SIZE), SEEK_SET);
+        fseek(fp, sb.inode_table_start * BLOCK_SIZE + (i * INODE_SIZE), SEEK_SET);
         fread(&temp_inode, sizeof(struct inode), 1, fp);
 
         int bitmap_used = (inode_bitmap[i / 8] >> (i % 8)) & 1;
-        int inode_valid = (temp_inode.hard_links > 0) && (temp_inode.deletion_time == 0);
+        
+        // Check inode validity using 'links' field
+        int inode_valid = (temp_inode.links > 0) && (temp_inode.deletion_time == 0);
 
         if (bitmap_used && !inode_valid) {
             printf("Inode %d is marked used in bitmap but is invalid.\n", i);
